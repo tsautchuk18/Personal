@@ -7,581 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
-
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --black: #1a1a18;
-      --white: #f6f9e9;
-      --accent: #4a6741;
-      --accent-dark: #2f4229;
-      --gray: #7a8a6e;
-      --gray-light: #dde8c8;
-      --serif: 'DM Serif Display', Georgia, serif;
-      --sans: 'DM Sans', system-ui, sans-serif;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--white);
-      color: var(--black);
-      font-family: var(--sans);
-      font-weight: 300;
-      overflow-x: hidden;
-      cursor: none;
-    }
-
-    /* Custom cursor */
-    .cursor {
-      width: 12px; height: 12px;
-      background: var(--accent);
-      border-radius: 50%;
-      position: fixed;
-      top: 0; left: 0;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s, background 0.2s;
-      mix-blend-mode: normal;
-    }
-    .cursor-ring {
-      width: 36px; height: 36px;
-      border: 1px solid rgba(74,103,65,0.4);
-      border-radius: 50%;
-      position: fixed;
-      top: 0; left: 0;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: all 0.12s ease;
-    }
-    body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 20px; height: 20px; }
-
-    /* Nav */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 28px 60px;
-      mix-blend-mode: normal;
-    }
-    nav::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, rgba(246,249,233,0.95) 0%, transparent 100%);
-      z-index: -1;
-      pointer-events: none;
-    }
-    .nav-logo {
-      font-family: var(--serif);
-      font-size: 18px;
-      color: var(--black);
-      text-decoration: none;
-      letter-spacing: 0.01em;
-    }
-    .nav-links {
-      display: flex;
-      gap: 40px;
-      list-style: none;
-    }
-    .nav-links a {
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--gray);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--black); }
-
-    /* Hero */
-    #hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-left {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 140px 60px 100px;
-      position: relative;
-      z-index: 2;
-    }
-    .hero-eyebrow {
-      font-size: 12px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 32px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .hero-eyebrow::before {
-      content: '';
-      display: block;
-      width: 32px;
-      height: 1px;
-      background: var(--accent);
-    }
-    .hero-name {
-      font-family: var(--serif);
-      font-size: clamp(56px, 7vw, 96px);
-      line-height: 0.95;
-      letter-spacing: -0.02em;
-      margin-bottom: 32px;
-    }
-    .hero-name em {
-      font-style: italic;
-      color: var(--accent);
-    }
-    .hero-desc {
-      font-size: 16px;
-      line-height: 1.7;
-      color: rgba(26,26,24,0.55);
-      max-width: 380px;
-      margin-bottom: 56px;
-    }
-    .hero-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--black);
-      text-decoration: none;
-      border-bottom: 1px solid var(--accent);
-      padding-bottom: 4px;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .hero-cta:hover { color: var(--accent); }
-    .hero-cta svg { transition: transform 0.2s; }
-    .hero-cta:hover svg { transform: translateX(4px); }
-
-    .hero-right {
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-img-placeholder {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #dde8c8 0%, #edf0db 50%, #dde8c8 100%);
-    }
-    .hero-img-placeholder::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 30% 60%, rgba(74,103,65,0.12) 0%, transparent 60%),
-        radial-gradient(circle at 80% 20%, rgba(74,103,65,0.07) 0%, transparent 50%);
-    }
-    .hero-grid-overlay {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(74,103,65,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(74,103,65,0.06) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-    .hero-initials {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: var(--serif);
-      font-size: clamp(120px, 18vw, 220px);
-      color: rgba(74,103,65,0.1);
-      letter-spacing: -0.05em;
-      user-select: none;
-      white-space: nowrap;
-    }
-    .hero-photo-label {
-      position: absolute;
-      bottom: 48px;
-      left: 40px;
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(26,26,24,0.35);
-      writing-mode: vertical-lr;
-      transform: rotate(180deg);
-    }
-    .hero-scroll-indicator {
-      position: absolute;
-      bottom: 40px;
-      right: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: var(--gray);
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-    .scroll-line {
-      width: 1px;
-      height: 48px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-      animation: scrollPulse 2s ease-in-out infinite;
-    }
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
-      50% { opacity: 1; transform: scaleY(1); }
-    }
-
-    .hero-year {
-      position: absolute;
-      top: 50%;
-      right: -12px;
-      transform: translateY(-50%) rotate(90deg);
-      font-size: 11px;
-      letter-spacing: 0.3em;
-      color: rgba(26,26,24,0.2);
-      text-transform: uppercase;
-    }
-
-    /* Sections shared */
-    section {
-      padding: 120px 60px;
-      position: relative;
-    }
-    .section-label {
-      font-size: 11px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 64px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: rgba(74,103,65,0.2);
-    }
-
-    /* About */
-    #sobre {
-      background: #edf0db;
-    }
-    .sobre-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-    .sobre-heading {
-      font-family: var(--serif);
-      font-size: clamp(36px, 4vw, 56px);
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-    }
-    .sobre-heading em { font-style: italic; color: var(--accent); }
-    .sobre-body {
-      font-size: 17px;
-      line-height: 1.8;
-      color: rgba(26,26,24,0.65);
-    }
-    .sobre-body p + p { margin-top: 20px; }
-    .sobre-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 48px;
-    }
-    .stat-item {}
-    .stat-number {
-      font-family: var(--serif);
-      font-size: 40px;
-      color: var(--black);
-      line-height: 1;
-    }
-    .stat-label {
-      font-size: 12px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-top: 4px;
-    }
-
-    /* Trajetória */
-    #trajetoria {
-      background: var(--white);
-    }
-    .timeline {
-      position: relative;
-      max-width: 720px;
-    }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 8px;
-      bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-    }
-    .timeline-item {
-      display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: 40px;
-      padding: 0 0 64px 32px;
-      position: relative;
-    }
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -4px;
-      top: 8px;
-      width: 9px; height: 9px;
-      border-radius: 50%;
-      background: var(--white);
-      border: 1px solid var(--accent);
-    }
-    .timeline-item:last-child { padding-bottom: 0; }
-    .timeline-period {
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      color: var(--gray);
-      padding-top: 4px;
-    }
-    .timeline-role {
-      font-family: var(--serif);
-      font-size: 22px;
-      line-height: 1.2;
-      margin-bottom: 6px;
-    }
-    .timeline-org {
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-    .timeline-desc {
-      font-size: 15px;
-      line-height: 1.7;
-      color: rgba(26,26,24,0.55);
-    }
-
-    /* Leituras */
-    #leituras {
-      background: #edf0db;
-    }
-    .leituras-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-    }
-    .livro-card {
-      background: #e4e9cd;
-      padding: 48px 40px;
-      position: relative;
-      overflow: hidden;
-      transition: background 0.3s;
-      cursor: none;
-    }
-    .livro-card:hover { background: #dbe3c2; }
-    .livro-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, var(--accent), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .livro-card:hover::before { opacity: 1; }
-    .livro-num {
-      font-family: var(--serif);
-      font-size: 72px;
-      color: rgba(74,103,65,0.1);
-      line-height: 1;
-      margin-bottom: 32px;
-    }
-    .livro-titulo {
-      font-family: var(--serif);
-      font-size: 24px;
-      line-height: 1.2;
-      color: var(--black);
-      margin-bottom: 10px;
-    }
-    .livro-autor {
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    /* Skills */
-    #skills {
-      background: var(--white);
-    }
-    .skills-layout {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 80px;
-      align-items: start;
-    }
-    .skills-intro {
-      font-family: var(--serif);
-      font-size: 34px;
-      line-height: 1.2;
-      letter-spacing: -0.01em;
-    }
-    .skills-intro em { font-style: italic; color: var(--accent); }
-    .skills-groups {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-    }
-    .skill-group-label {
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-bottom: 16px;
-    }
-    .skill-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .skill-tag {
-      font-size: 13px;
-      letter-spacing: 0.04em;
-      color: rgba(26,26,24,0.7);
-      border: 1px solid rgba(26,26,24,0.15);
-      padding: 8px 20px;
-      border-radius: 2px;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .skill-tag:hover {
-      border-color: var(--accent);
-      color: var(--black);
-    }
-
-    /* Contato */
-    #contato {
-      background: #edf0db;
-      min-height: 60vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .contato-inner {
-      max-width: 800px;
-    }
-    .contato-heading {
-      font-family: var(--serif);
-      font-size: clamp(48px, 7vw, 88px);
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-      margin-bottom: 56px;
-    }
-    .contato-heading em { font-style: italic; color: var(--accent); }
-    .contato-links {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .contato-link-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 28px 0;
-      border-top: 1px solid rgba(26,26,24,0.1);
-      text-decoration: none;
-      color: var(--black);
-      transition: padding-left 0.3s;
-      group: true;
-    }
-    .contato-link-item:last-child { border-bottom: 1px solid rgba(26,26,24,0.1); }
-    .contato-link-item:hover { padding-left: 12px; }
-    .contato-link-label {
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gray);
-      min-width: 100px;
-    }
-    .contato-link-value {
-      font-family: var(--serif);
-      font-size: 22px;
-      flex: 1;
-      padding: 0 40px;
-    }
-    .contato-link-arrow {
-      color: rgba(74,103,65,0.3);
-      transition: color 0.3s, transform 0.3s;
-    }
-    .contato-link-item:hover .contato-link-arrow {
-      color: var(--accent);
-      transform: translateX(6px);
-    }
-
-    /* Footer */
-    footer {
-      background: var(--white);
-      padding: 40px 60px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid rgba(26,26,24,0.1);
-    }
-    .footer-copy {
-      font-size: 12px;
-      color: rgba(26,26,24,0.4);
-      letter-spacing: 0.06em;
-    }
-    .footer-name {
-      font-family: var(--serif);
-      font-size: 13px;
-      color: rgba(26,26,24,0.4);
-    }
-
-    /* Animations */
-    .reveal {
-      opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      nav { padding: 24px 32px; }
-      section { padding: 80px 32px; }
-      #hero { grid-template-columns: 1fr; }
-      .hero-left { padding: 120px 32px 80px; }
-      .hero-right { display: none; }
-      .sobre-grid { grid-template-columns: 1fr; gap: 48px; }
-      .leituras-grid { grid-template-columns: 1fr; }
-      .skills-layout { grid-template-columns: 1fr; gap: 48px; }
-      .timeline-item { grid-template-columns: 1fr; gap: 8px; }
-      footer { flex-direction: column; gap: 12px; text-align: center; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
@@ -594,8 +20,9 @@
     <ul class="nav-links">
       <li><a href="#sobre">Sobre</a></li>
       <li><a href="#trajetoria">Trajetória</a></li>
-      <li><a href="#leituras">Leituras</a></li>
+      <li><a href="#leituras">Minha estante</a></li>
       <li><a href="#skills">Skills</a></li>
+      <li><a href="#escritos">Escritos</a></li>
       <li><a href="#contato">Contato</a></li>
     </ul>
   </nav>
@@ -707,39 +134,141 @@
     </div>
   </section>
 
-  <!-- LEITURAS -->
+  <!-- MINHA ESTANTE -->
   <section id="leituras">
-    <div class="section-label">Leituras</div>
+    <div class="section-label">Minha estante</div>
     <div class="leituras-grid">
 
       <div class="livro-card reveal">
         <div class="livro-num">01</div>
         <div class="livro-titulo">Outliers</div>
-        <div class="livro-autor">Malcolm Gladwell</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Malcolm Gladwell</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
       </div>
 
       <div class="livro-card reveal reveal-delay-1">
         <div class="livro-num">02</div>
-        <div class="livro-titulo">As Cartas de Bezos</div>
-        <div class="livro-autor">Jeff Bezos</div>
+        <div class="livro-titulo">Ponto de Virada</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Malcolm Gladwell</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
       </div>
 
       <div class="livro-card reveal reveal-delay-2">
         <div class="livro-num">03</div>
-        <div class="livro-titulo">O Jogo Infinito</div>
-        <div class="livro-autor">Simon Sinek</div>
+        <div class="livro-titulo">Cultura da Convergência</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Henry Jenkins</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
       </div>
 
-      <div class="livro-card reveal reveal-delay-3">
+      <div class="livro-card reveal">
         <div class="livro-num">04</div>
-        <div class="livro-titulo">O Monge e o Executivo</div>
-        <div class="livro-autor">James C. Hunter</div>
+        <div class="livro-titulo">Eu, Elton John</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Elton John</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
       </div>
 
-      <div class="livro-card reveal reveal-delay-4">
+      <div class="livro-card reveal reveal-delay-1">
         <div class="livro-num">05</div>
+        <div class="livro-titulo">Era de Gigantes</div>
+        <div class="livro-meta">
+          <div class="livro-tipo">Livro</div>
+        </div>
+      </div>
+
+      <div class="livro-card reveal reveal-delay-2">
+        <div class="livro-num">06</div>
+        <div class="livro-titulo">Pense de Novo</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Adam Grant</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
+      </div>
+
+      <div class="livro-card reveal">
+        <div class="livro-num">07</div>
+        <div class="livro-titulo">Previsivelmente Irracional</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Dan Ariely</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
+      </div>
+
+      <div class="livro-card reveal reveal-delay-1">
+        <div class="livro-num">08</div>
+        <div class="livro-titulo">Storytelling</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Carmine Gallo</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
+      </div>
+
+      <div class="livro-card reveal reveal-delay-2">
+        <div class="livro-num">09</div>
+        <div class="livro-titulo">Agassi: Uma Autobiografia</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Andre Agassi</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
+      </div>
+
+      <div class="livro-card reveal">
+        <div class="livro-num">10</div>
+        <div class="livro-titulo">As Cartas de Bezos</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Jeff Bezos</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
+      </div>
+
+      <div class="livro-card reveal reveal-delay-1">
+        <div class="livro-num">11</div>
+        <div class="livro-titulo">O Jogo Infinito</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Simon Sinek</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
+      </div>
+
+      <div class="livro-card reveal reveal-delay-2">
+        <div class="livro-num">12</div>
+        <div class="livro-titulo">O Monge e o Executivo</div>
+        <div class="livro-meta">
+          <div class="livro-autor">James C. Hunter</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
+      </div>
+
+      <div class="livro-card reveal">
+        <div class="livro-num">13</div>
         <div class="livro-titulo">Originais</div>
-        <div class="livro-autor">Adam Grant</div>
+        <div class="livro-meta">
+          <div class="livro-autor">Adam Grant</div>
+          <div class="livro-tipo">Livro</div>
+        </div>
+      </div>
+
+      <div class="livro-card reveal reveal-delay-1">
+        <div class="livro-num">14</div>
+        <div class="livro-titulo">A Rede Social</div>
+        <div class="livro-meta">
+          <div class="livro-tipo">Filme</div>
+        </div>
+      </div>
+
+      <div class="livro-card reveal reveal-delay-2">
+        <div class="livro-num">15</div>
+        <div class="livro-titulo">The Bear</div>
+        <div class="livro-meta">
+          <div class="livro-tipo">Série</div>
+        </div>
       </div>
 
     </div>
@@ -790,6 +319,80 @@
     </div>
   </section>
 
+  <!-- O QUE JÁ ESCREVI -->
+  <section id="escritos">
+    <div class="section-label">O que já escrevi</div>
+    <div class="escritos-grid">
+
+      <div class="escrito-card reveal">
+        <div class="escrito-num">01</div>
+        <div class="escrito-titulo">Netflix comprova: O mundo gira para todos</div>
+        <a href="https://tsautchuk.medium.com/netflix-comprova-o-mundo-gira-para-todos-4170c16da1c6" target="_blank" rel="noopener noreferrer" class="escrito-link">
+          Ler no Medium
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2v7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="escrito-card reveal reveal-delay-1">
+        <div class="escrito-num">02</div>
+        <div class="escrito-titulo">O Superman é chato?</div>
+        <a href="https://tsautchuk.medium.com/o-superman-%C3%A9-chato-aff0f2c67f7a" target="_blank" rel="noopener noreferrer" class="escrito-link">
+          Ler no Medium
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2v7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="escrito-card reveal">
+        <div class="escrito-num">03</div>
+        <div class="escrito-titulo">Por que o Senna é o maior ídolo brasileiro?</div>
+        <a href="https://tsautchuk.medium.com/por-que-o-senna-%C3%A9-o-maior-%C3%ADdolo-brasileiro-7100b7514785" target="_blank" rel="noopener noreferrer" class="escrito-link">
+          Ler no Medium
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2v7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="escrito-card reveal reveal-delay-1">
+        <div class="escrito-num">04</div>
+        <div class="escrito-titulo">Efeito dominó</div>
+        <a href="https://tsautchuk.medium.com/efeito-domin%C3%B3-ad512ab5e3ca" target="_blank" rel="noopener noreferrer" class="escrito-link">
+          Ler no Medium
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2v7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="escrito-card reveal">
+        <div class="escrito-num">05</div>
+        <div class="escrito-titulo">Michael Phelps é o maior atleta olímpico da história, mas essa não é sua maior conquista</div>
+        <a href="https://tsautchuk.medium.com/michael-phelps-%C3%A9-o-maior-atleta-ol%C3%ADmpico-da-hist%C3%B3ria-mas-essa-n%C3%A3o-%C3%A9-sua-maior-conquista-4fdabc4331a" target="_blank" rel="noopener noreferrer" class="escrito-link">
+          Ler no Medium
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2v7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="escrito-card reveal reveal-delay-1">
+        <div class="escrito-num">06</div>
+        <div class="escrito-titulo">Esporte e política andam, e sempre andarão, lado a lado</div>
+        <a href="https://tsautchuk.medium.com/esporte-e-pol%C3%ADtica-andam-e-sempre-andar%C3%A3o-lado-a-lado-2923958aa8f" target="_blank" rel="noopener noreferrer" class="escrito-link">
+          Ler no Medium
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L12 2M12 2H5M12 2v7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
   <!-- CONTATO -->
   <section id="contato">
     <div class="section-label">Contato</div>
@@ -827,39 +430,7 @@
     <span class="footer-name">São Paulo, Brasil</span>
   </footer>
 
-  <script>
-    // Custom cursor
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursor-ring');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.left = mx + 'px';
-      cursor.style.top = my + 'px';
-    });
-    function animateRing() {
-      rx += (mx - rx) * 0.15;
-      ry += (my - ry) * 0.15;
-      ring.style.left = rx + 'px';
-      ring.style.top = ry + 'px';
-      requestAnimationFrame(animateRing);
-    }
-    animateRing();
-
-    // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.12 });
-    reveals.forEach(el => observer.observe(el));
-
-    // Hero elements immediate reveal
-    document.querySelectorAll('#hero .reveal').forEach(el => el.classList.add('visible'));
-  </script>
+  <script src="js/main.js"></script>
 
 </body>
 </html>
